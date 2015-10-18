@@ -7,7 +7,7 @@ angular.module('app')
   $scope.logout = function () {
     delete $scope.currentUser;
     UserSvc.logout();
-    $location.path('/');
+    $location.path('/login');
     console.log('logging out');
   };
 });

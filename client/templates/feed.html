@@ -1,0 +1,35 @@
+<div class='row'>
+  <div class='large-2 columns small-3'>
+    <img ng-src="{{currentUser.avatarUrl}}"/>
+  </div>
+  <div class='large-10 columns'>
+    <form ng-submit='createPost()'>
+      <label>
+        What's on your mind?
+        <textarea ng-model='newPost.body' rows="8" cols="40"></textarea>
+      </label>
+      <br>
+      <input class='button small' type='submit' value='Post'>
+    </form>
+  </div>
+</div>
+<div class='row' ng-repeat='post in posts'>
+  <div class="large-2 columns small-3"><img ng-src="{{post.user.avatarUrl}}"/></div>
+  <div class="large-10 columns">
+    <p><a ng-href='#/users/{{post.user.username}}'>{{post.user.fullName}}</a> {{post.body}}</p>
+
+    <!--<ul class="inline-list">-->
+      <!--<li><a href="">Reply</a></li>-->
+      <!--<li><a href="">Share</a></li>-->
+    <!--</ul>-->
+    <!--<h6>2 Comments</h6>-->
+    <!--<div class="row">-->
+      <!--<div class="large-2 columns small-3"><img src="//placeimg.com/50/50/people"/></div>-->
+      <!--<div class="large-10 columns"><p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit</p></div>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+      <!--<div class="large-2 columns small-3"><img src="//placeimg.com/50/50/people"/></div>-->
+      <!--<div class="large-10 columns"><p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit</p></div>-->
+    <!--</div>-->
+  </div>
+</div>

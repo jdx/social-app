@@ -5,6 +5,7 @@ let app     = express();
 
 app.use(require('morgan')(app.get('env') === 'development' ? 'dev' : 'combined'));
 app.use(express.static('public'));
+app.use('/templates', express.static('client/templates'));
 app.get('/', (req, res) => res.render('index.html.ejs'));
 
 app.use(require('body-parser').json());

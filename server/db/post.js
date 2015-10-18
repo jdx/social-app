@@ -1,10 +1,9 @@
 'use strict';
 let db = require('.');
 
-let User = db.model('User', {
-  fullName: {type: String, required: true},
-  username: {type: String, required: true, unique: true},
-  password: {type: String, required: true, select: false},
+let Post = db.model('Post', {
+  body: {type: String, required: true},
+  user: {type: db.Schema.ObjectId, required: true, ref: 'User'},
 });
 
-module.exports = User;
+module.exports = Post;
