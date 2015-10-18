@@ -1,21 +1,63 @@
 'use strict';
 
-let r        = require('express').Router();
-let User     = require('../db/user');
-let bcrypt   = require('bcrypt');
-let jwt      = require('jsonwebtoken');
-let config   = require('../config');
-let gravatar = require('gravatar');
-
-r.use(require('../middleware/auth'));
+let r         = require('express').Router();
+let User      = require('../db/user');
+let Following = require('../db/following');
+let bcrypt    = require('bcrypt');
+let jwt       = require('jsonwebtoken');
+let config    = require('../config');
+let gravatar  = require('gravatar');
 
 r.get('/api/user', function (req, res, next) {
   if (!req.user) return res.sendStatus(401);
-  console.log(req.user);
-  User.findById(req.user._id, function (err, user) {
+  User.findById(req.user._id)
+  .exec(function (err, user) {
     if (err) return next(err);
-    console.log(user);
     res.json(user);
+  });
+});
+
+r.get('/api/users/:username', function (req, res, next) {
+  User.findOne({username: req.params.username})
+  .exec(function (err, user) {
+    if (err) return next(err);
+    res.json(user);
+  });
+});
+
+r.get('/api/users/:username/follow', function (req, res, next) {
+  User.findOne({username: req.params.username})
+  .exec(function (err, user) {
+    if (err) return next(err);
+    Following.findOne({from: req.user._id, to: user._id})
+    .exec(function (err, followed) {
+      if (err) return next(err);
+      res.json(!!followed);
+    });
+  });
+});
+
+r.post('/api/users/:username/follow', function (req, res, next) {
+  User.findOne({username: req.params.username})
+  .exec(function (err, user) {
+    if (err) return next(err);
+    let following = new Following({from: req.user._id, to: user._id});
+    following.save(function (err) {
+      if (err) return next(err);
+      res.sendStatus(201);
+    });
+  });
+});
+
+r.post('/api/users/:username/unfollow', function (req, res, next) {
+  User.findOne({username: req.params.username})
+  .exec(function (err, user) {
+    if (err) return next(err);
+    Following.find({from: req.user._id, to: user._id})
+    .remove()
+    .exec(function (err) {
+      res.sendStatus(200);
+    });
   });
 });
 
@@ -40,7 +82,6 @@ function getUserWithPassword(username, password, callback) {
   .exec(function (err, user) {
     if (err)   return callback(err);
     if (!user) return callback();
-    console.log(user);
     bcrypt.compare(password, user.password, function (err, valid) {
       if (err)    return callback(err);
       if (!valid) return callback();

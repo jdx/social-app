@@ -1,1 +1,9 @@
-{{user}}
+<div ng-if='user'>
+  {{user.fullName}}
+  <br>
+  <img ng-src='{{user.avatarUrl}}'>
+  <br>
+  <br>
+  <button ng-if='currentUser && currentUser.username != user.username && !following' ng-click='follow()' class='button'>Follow</button>
+  <button ng-if='currentUser && currentUser.username != user.username && following' ng-click='unfollow()' class='button'>Unfollow</button>
+</div>

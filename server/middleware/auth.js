@@ -3,7 +3,7 @@
 let config = require('../config');
 let jwt = require('jsonwebtoken');
 
-module.exports = function (req, res, next) {
+function auth (req, res, next) {
   let token = req.headers['auth-token'];
   if (!token) return next();
   jwt.verify(token, config.secret, function (err, user) {
@@ -12,4 +12,10 @@ module.exports = function (req, res, next) {
     delete req.user.password;
     next();
   });
+};
+
+module.exports = auth;
+module.exports.required = function (req, res, next) {
+  if (!req.user) return res.sendStatus(401);
+  next();
 };

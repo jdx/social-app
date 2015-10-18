@@ -24,4 +24,22 @@ angular.module('app')
   svc.logout = function () {
     delete $http.defaults.headers.common['Auth-Token'];
   };
+
+  svc.fetchUser = function (username) {
+    return $http.get('/api/users/' + username)
+    .then(function (rsp) { return rsp.data; });
+  };
+
+  svc.isFollowing = function (username) {
+    return $http.get('/api/users/'+username+'/follow')
+    .then(function (rsp) {return rsp.data;});
+  };
+
+  svc.follow = function (username) {
+    return $http.post('/api/users/'+username+'/follow');
+  };
+
+  svc.unfollow = function (username) {
+    return $http.post('/api/users/'+username+'/unfollow');
+  };
 });

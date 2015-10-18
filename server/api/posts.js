@@ -1,17 +1,24 @@
 'use strict';
 
-let r    = require('express').Router();
-let Post = require('../db/post');
-
-r.use(require('../middleware/auth'));
+let r         = require('express').Router();
+let Post      = require('../db/post');
+let Following = require('../db/following');
 
 r.get('/api/posts', function (req, res, next) {
-  Post.find()
-  .populate('user')
-  .sort('-_id')
-  .exec(function (err, posts) {
+  Following.find({from: req.user._id})
+  .exec(function (err, followings) {
     if (err) return next(err);
-    res.json(posts);
+    followings = followings.map(f => f.to);
+    followings.push(req.user._id); // see own posts
+
+    Post.find()
+    .where('user').in(followings)
+    .populate('user')
+    .sort('-_id')
+    .exec(function (err, posts) {
+      if (err) return next(err);
+      res.json(posts);
+    });
   });
 });
 

@@ -9,8 +9,10 @@ app.use('/templates', express.static('client/templates'));
 app.get('/', (req, res) => res.render('index.html.ejs'));
 
 app.use(require('body-parser').json());
-app.use(require('./api/posts'));
+app.use(require('./middleware/auth'));
 app.use(require('./api/user'));
+app.use(require('./middleware/auth').required);
+app.use(require('./api/posts'));
 
 let port = process.env.PORT || 3000;
 app.listen(port, function () {
