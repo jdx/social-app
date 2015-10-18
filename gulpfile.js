@@ -16,7 +16,7 @@ gulp.task('watch', ['client'], function () {
 
 gulp.task('dev', ['watch'], function () {
   nodemon({
-    script: 'server.js',
+    script: 'server/index.js',
     ext: '.js',
     ignore: ['client/', 'public/'],
   });

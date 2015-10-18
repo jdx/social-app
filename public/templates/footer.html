@@ -7,12 +7,11 @@
       </div>
       <div class="large-7 columns">
         <ul class="inline-list right">
-          <li><a href="#">Section 1</a></li>
-          <li><a href="#">Section 2</a></li>
-          <li><a href="#">Section 3</a></li>
-          <li><a href="#">Section 4</a></li>
-          <li><a href="#">Section 5</a></li>
-          <li><a href="#">Section 6</a></li>
+          <li><a href="/">Home</a></li>
+          <li ng-if='currentUser'><a ng-click='logout()' href="#">Logout</a></li>
+          <li ng-if='!currentUser'><a href="#/login">Login</a></li>
+          <li ng-if='!currentUser'><a href="#/register">Register</a></li>
+          <li><a href="/">About Us</a></li>
         </ul>
       </div>
     </div>
