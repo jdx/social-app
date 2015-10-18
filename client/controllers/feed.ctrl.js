@@ -1,5 +1,5 @@
 angular.module('app')
-.controller('FeedCtrl', function ($scope, $location, PostSvc) {
+.controller('FeedCtrl', function ($scope, $location, PostSvc, WebSocketSvc) {
   if (!$scope.currentUser) {
     $location.path('/login');
   }
@@ -11,6 +11,10 @@ angular.module('app')
     });
   }
   refresh();
+
+  WebSocketSvc.on('post', function (post) {
+    console.log(post);
+  });
 
   $scope.createPost = function () {
     PostSvc.create($scope.newPost)

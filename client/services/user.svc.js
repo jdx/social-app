@@ -1,5 +1,5 @@
 angular.module('app')
-.service('UserSvc', function ($http) {
+.service('UserSvc', function ($http, WebSocketSvc) {
   var svc = this;
 
   svc.getUser = function () {
@@ -12,6 +12,7 @@ angular.module('app')
     .then(function (rsp) {
       svc.token = rsp.data;
       $http.defaults.headers.common['Auth-Token'] = svc.token;
+      WebSocketSvc.connect(svc.token);
       return svc.getUser();
     });
   };

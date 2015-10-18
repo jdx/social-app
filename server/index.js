@@ -1,7 +1,9 @@
 'use strict';
 
-let express = require('express');
-let app     = express();
+let express   = require('express');
+let app       = express();
+let server    = require('http').Server(app);
+require('./websocket')(server);
 
 app.use(require('morgan')(app.get('env') === 'development' ? 'dev' : 'combined'));
 app.use(express.static('public'));
@@ -15,6 +17,6 @@ app.use(require('./middleware/auth').required);
 app.use(require('./api/posts'));
 
 let port = process.env.PORT || 3000;
-app.listen(port, function () {
+server.listen(port, function () {
   console.log(`server listening on :${port}`);
 });
