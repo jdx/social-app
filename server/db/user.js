@@ -1,7 +1,7 @@
 'use strict';
 let db = require('.');
 
-let User = db.model('User', {
+let schema = new db.Schema({
   fullName:  {type: String, required: true},
   email:     {type: String, required: true, unique: true},
   avatarUrl: {type: String, required: true},
@@ -9,4 +9,4 @@ let User = db.model('User', {
   password:  {type: String, required: true, select: false},
 });
 
-module.exports = User;
+module.exports = db.model('User', schema);

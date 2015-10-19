@@ -3,16 +3,12 @@
 let r         = require('express').Router();
 let Post      = require('../db/post');
 let Following = require('../db/following');
+let Event     = require('../db/event');
 
 r.get('/api/posts', function (req, res, next) {
-  Following.find({from: req.user._id})
-  .exec(function (err, followings) {
+  Following.fromUser(req.user._id, function (err, followings) {
     if (err) return next(err);
-    followings = followings.map(f => f.to);
-    followings.push(req.user._id); // see own posts
-
-    Post.find()
-    .where('user').in(followings)
+    Post.where('user').in(followings)
     .populate('user')
     .sort('-_id')
     .exec(function (err, posts) {
@@ -22,12 +18,23 @@ r.get('/api/posts', function (req, res, next) {
   });
 });
 
+r.get('/api/posts/:id', function (req, res, next) {
+  Post.findById(req.params.id)
+  .populate('user')
+  .exec(function (err, post) {
+    if (err) return next(err);
+    res.json(post);
+  });
+});
+
 r.post('/api/posts', function (req, res, next) {
   let post = new Post(req.body);
   post.user = req.user._id;
-  post.save(function (err) {
+  post.save(function (err, post) {
     if (err) return next(err);
     res.sendStatus(201);
+    let event = new Event({type: 'Post', of: post._id, by: post.user});
+    event.save(err => err && console.error(err.stack));
   });
 });
 

@@ -9,7 +9,6 @@ function auth (req, res, next) {
   jwt.verify(token, config.secret, function (err, user) {
     if (err) return next(err);
     req.user = user;
-    delete req.user.password;
     next();
   });
 };

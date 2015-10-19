@@ -95,7 +95,7 @@ r.post('/api/login', function (req, res, next) {
     if (err)   return next(err);
     if (!user) return res.sendStatus(401);
     let payload = {_id: user._id, username: user.username};
-    let token = jwt.sign(payload, config.secret);
+    let token = jwt.sign(payload, config.secret, {expiresIn: '24h'});
     res.send(token);
   });
 });
